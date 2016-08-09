@@ -36,6 +36,14 @@ MODULE_AUTHOR( DRIVER_AUTHOR );
 MODULE_DESCRIPTION( DRIVER_DESC );
 MODULE_LICENSE("GPL");
 
+#undef TTYDEG
+#ifdef TTY_DEBUG
+    #ifdef __KERNEL__
+    define  TTYDEG(fmt,args...) printk(KERN_DEBUG,"TTY: " fmt)
+    #endif
+#endif
+
+
 #define DELAY_TIME		HZ * 2	/* 2 seconds per character */
 #define TINY_DATA_CHARACTER	't'
 
@@ -538,6 +546,7 @@ static int __init tiny_init(void)
 	int i;
 	struct tiny_serial *tiny;
 
+	TTYDEG("tiny_init in\n");
 	/* allocate the tty driver */
 	tiny_tty_driver = alloc_tty_driver(TINY_TTY_MINORS);
 	if (!tiny_tty_driver)
@@ -584,6 +593,8 @@ static int __init tiny_init(void)
 	}
 
 	printk(KERN_INFO DRIVER_DESC " " DRIVER_VERSION "\n");
+	
+	TTYDEG("tiny_init out\n");
 	return retval;
 
 err_kmalloc_tiny:
