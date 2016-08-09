@@ -36,11 +36,11 @@ MODULE_AUTHOR( DRIVER_AUTHOR );
 MODULE_DESCRIPTION( DRIVER_DESC );
 MODULE_LICENSE("GPL");
 
-#undef TTYDEG
-#ifdef TTY_DEBUG
-    #ifdef __KERNEL__
-    define  TTYDEG(fmt,args...) printk(KERN_DEBUG,"TTY: " fmt)
-    #endif
+#undef TTTYDBG
+#ifdef TTTY_DEBUG
+   #ifdef __KERNEL__
+    #define  TTTYDBG(fmt,args...) printk( "TTY: " fmt,##args)
+   #endif
 #endif
 
 
@@ -76,6 +76,8 @@ static void tiny_timer(unsigned long timer_data)
 	char data[1] = {TINY_DATA_CHARACTER};
 	int data_size = 1;
 
+        TTTYDBG("%s in \n",__FUNCTION__);
+     
 	if (!tiny)
 		return;
 
@@ -94,6 +96,7 @@ static void tiny_timer(unsigned long timer_data)
 	/* resubmit the timer again */
 	tiny->timer->expires = jiffies + DELAY_TIME;
 	add_timer(tiny->timer);
+        TTTYDBG("%s out \n",__FUNCTION__);
 }
 
 /*
@@ -105,6 +108,7 @@ static int tiny_activate(struct tty_port *tport, struct tty_struct *tty)
 	struct tiny_serial *tiny;
 	struct timer_list *timer;
 
+        TTTYDBG("%s in \n",__FUNCTION__);
 	tiny = container_of(tport, struct tiny_serial, port);
 
 	/* create our timer and submit it */
@@ -120,6 +124,7 @@ static int tiny_activate(struct tty_port *tport, struct tty_struct *tty)
 	tiny->timer->expires = jiffies + DELAY_TIME;
 	tiny->timer->function = tiny_timer;
 	add_timer(tiny->timer);
+	TTTYDBG("%s out \n",__FUNCTION__);
 	return 0;
 }
 
@@ -142,7 +147,7 @@ static int tiny_open(struct tty_struct *tty, struct file *file)
 	int index;
 	struct tty_port *port;
 	int status;
-
+        TTTYDBG("%s in \n",__FUNCTION__);
 	/* initialize the pointer in case something fails */
 	tty->driver_data = NULL;
 
@@ -159,6 +164,7 @@ static int tiny_open(struct tty_struct *tty, struct file *file)
 		tty->driver_data = tiny;
 	}
 
+        TTTYDBG("%s out \n",__FUNCTION__);
 	return status;
 }
 
@@ -183,6 +189,7 @@ static int tiny_write(struct tty_struct *tty,
 	struct tty_port *port;
 	unsigned long flags;
 
+        TTTYDBG("%s in \n",__FUNCTION__);
 	if (!tiny)
 		return -ENODEV;
 
@@ -209,6 +216,7 @@ static int tiny_write(struct tty_struct *tty,
 		
 exit:
 	mutex_unlock(&tiny->port_write_mutex);
+	TTTYDBG("%s out \n",__FUNCTION__);
 	return retval;
 }
 
@@ -546,7 +554,7 @@ static int __init tiny_init(void)
 	int i;
 	struct tiny_serial *tiny;
 
-	TTYDEG("tiny_init in\n");
+        TTTYDBG("tiny_init in\n");
 	/* allocate the tty driver */
 	tiny_tty_driver = alloc_tty_driver(TINY_TTY_MINORS);
 	if (!tiny_tty_driver)
@@ -594,7 +602,7 @@ static int __init tiny_init(void)
 
 	printk(KERN_INFO DRIVER_DESC " " DRIVER_VERSION "\n");
 	
-	TTYDEG("tiny_init out\n");
+	TTTYDBG("tiny_init out\n");
 	return retval;
 
 err_kmalloc_tiny:
