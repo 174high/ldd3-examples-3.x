@@ -1,10 +1,10 @@
 # Comment/uncomment the following line to disable/enable debugging
-#DEBUG = y
+DEBUG = y
 
 
 # Add your debugging flag (or not) to EXTRA_CFLAGS
 ifeq ($(DEBUG),y)
-  DEBFLAGS = -O -g -DSCULL_DEBUG # "-O" is needed to expand inlines
+  DEBFLAGS = -O -g -DTTTY_DEBUG  # "-O" is needed to expand inlines
 else
   DEBFLAGS = -O2
 endif
