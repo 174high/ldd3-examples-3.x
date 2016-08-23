@@ -189,7 +189,7 @@ static int tiny_write(struct tty_struct *tty,
 	struct tty_port *port;
 	unsigned long flags;
 
-        TTTYDBG("%s in \n",__FUNCTION__);
+    TTTYDBG("%s in \n",__FUNCTION__);
 	if (!tiny)
 		return -ENODEV;
 
@@ -200,7 +200,7 @@ static int tiny_write(struct tty_struct *tty,
 	if (!port->count) {
 		spin_unlock_irqrestore(&port->lock, flags);
 		/* port was not opened */
-		retval = -EINVAL;
+		retval = -EINVAL; 
 		goto exit;
 	}
 	spin_unlock_irqrestore(&port->lock, flags);
