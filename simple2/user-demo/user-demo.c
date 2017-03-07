@@ -8,40 +8,40 @@
 
 int main(void)
 {
- int fd;
- char *addr=NULL;
- fd = open("/dev/mmap",O_RDWR);
- if(fd < 0) {
- perror("open");
- return 0;
- }
- addr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED,
- fd, 0);
- if(addr == MAP_FAILED) {
- perror("mmap");
- return 0;
- }
- printf("%s\n", addr);
- memset(addr,'f',100);
- addr[0]='p';
- printf("%s\n", addr);
- munmap(addr,4096);
- addr=NULL;
- close(fd);
+	int fd;
+	char *addr=NULL;
+	fd = open("/dev/mmap",O_RDWR);
+	if(fd < 0) {
+		perror("open");
+		return 0;
+	}
+	addr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED,
+			fd, 0);
+	if(addr == MAP_FAILED) {
+		perror("mmap");
+		return 0;
+	}
+	printf("%s\n", addr);
+	memset(addr,'f',100);
+	addr[0]='p';
+	printf("%s\n", addr);
+	munmap(addr,4096);
+	addr=NULL;
+	close(fd);
 
- fd = open("/dev/mmap",O_RDWR);
- if(fd < 0) {
- perror("open");
- return 0;
- }
- addr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED,
- fd, 0);
- if(addr == MAP_FAILED) {
- perror("mmap");
- return 0;
- }
- printf("%s\n", addr);
- munmap(addr,4096);
- close(fd);
- return(0);
+	fd = open("/dev/mmap",O_RDWR);
+	if(fd < 0) {
+		perror("open");
+		return 0;
+	}
+	addr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED,
+			fd, 0);
+	if(addr == MAP_FAILED) {
+		perror("mmap");
+		return 0;
+	}
+	printf("%s\n", addr);
+	munmap(addr,4096);
+	close(fd);
+	return(0);
 }

@@ -1,0 +1,2 @@
+insmod demo.ko
+mknod  /dev/mmap c 224 0
