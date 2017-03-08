@@ -49,6 +49,8 @@ static int simple_mmap(struct file *filp, struct vm_area_struct *vma)
 //实际的驱动程序中这里就是设备的物理地址，不需要转换了！
      vma->vm_end-vma->vm_start,
      PAGE_SHARED);
+
+ printk("--shinq--addr=%x",virt_to_phys((void *)((unsigned long)buffer_area))>>PAGE_SHIFT);
  if(ret != 0) {
   return -EAGAIN;
  }
@@ -119,7 +121,7 @@ int simple_init_module(void)
  }
  
  buffer = kmalloc(4096,GFP_KERNEL);           
-    printk(" mmap buffer = %p\n",buffer);           
+ printk(" mmap buffer = %p\n",buffer);           
  buffer_area=(int *)(((unsigned long)buffer + PAGE_SIZE -1) & PAGE_MASK);
 
  for (virt_addr=(unsigned long)buffer_area; virt_addr<(unsigned long)buffer_area+4096;
